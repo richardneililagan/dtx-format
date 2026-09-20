@@ -1,0 +1,38 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Integrity only. Conformance is asserted by each consumer against these
+      # fixtures, in that consumer's CI — never here. See README.md.
+      - name: Validate fixture integrity
+        run: node scripts/validate.mjs
+
+      # A chart whose bytes git rewrote on checkout would still hash correctly
+      # above if .gitattributes were removed in the same commit. This catches
+      # that: a clean checkout must have nothing to normalise.
+      - name: Assert checkout is byte-clean
+        run: |
+          git add --renormalize . 2>/dev/null || true
+          if ! git diff --quiet; then
+            echo "::error::Checkout is not byte-stable. Something under charts/ or parse/ is being normalised — check .gitattributes."
+            git diff --stat
+            exit 1
+          fi
+          echo "checkout is byte-clean"

@@ -1,0 +1,30 @@
+dtx-format
+Copyright (c) 2026 Richard Neil Ilagan
+
+This repository is licensed under the MIT License (see LICENSE).
+
+--------------------------------------------------------------------------
+Chart fixtures
+--------------------------------------------------------------------------
+
+Files under `charts/` are chart files in the DTX format family (DTX, BMS,
+BME, GDA, G2D). Where a chart is a third-party work, it is included here
+solely as a conformance fixture — to pin how a parser must behave on real
+input — and is NOT covered by this repository's MIT licence. Each such chart
+retains the rights of its original author.
+
+Charts authored for this repository are covered by the MIT licence along with
+everything else, and are marked as such in `charts/<slug>/PROVENANCE.md`.
+
+Every chart carries a `PROVENANCE.md` recording where it came from and why it
+is here. A chart without one is a defect, and `scripts/validate.mjs` fails the
+build on it.
+
+--------------------------------------------------------------------------
+Relationship to DTXMania
+--------------------------------------------------------------------------
+
+The DTX format family originates with DTXMania (Copyright (C) 2000-2010
+DTXMania Group), which is distributed under the MIT License. This repository
+contains an independent description of the format and conformance fixtures
+for it; it includes no DTXMania source code.

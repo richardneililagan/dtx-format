@@ -1,0 +1,23 @@
+# Line endings are LF everywhere, in the repository and in every working tree.
+* text=auto eol=lf
+
+# ---------------------------------------------------------------------------
+# Chart fixtures. Read this before adding a rule above it.
+#
+# The encoding and the line endings ARE the fixture. This corpus deliberately
+# holds Shift-JIS, UTF-16LE and LF-only charts, and at least one whose bytes
+# are not valid Shift-JIS anywhere. Normalising any of that silently rewrites
+# the thing under test, and the rewrite is invisible in review because the
+# rendered diff looks identical.
+#
+# `-text` disables all conversion. `diff` keeps them reviewable, because a
+# change to a chart still has to be readable by a human.
+#
+# This exemption is load-bearing. scripts/validate.mjs pins every chart's
+# SHA-256 so that if this line is ever removed or bypassed, CI fails loudly
+# rather than quietly accepting rewritten bytes.
+# ---------------------------------------------------------------------------
+charts/** -text diff
+
+# Generated parse snapshots. Held to the same rules as source.
+parse/** -text diff

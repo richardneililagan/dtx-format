@@ -1,0 +1,14 @@
+{
+  "$comment": "Expected fp1 fingerprints. See fp1/README.md before editing.",
+  "algorithm": "fp1",
+  "fixtures": [
+    {
+      "slug": "placeholder-minimal",
+      "chart": "charts/placeholder-minimal/placeholder.dtx",
+      "sha256": "c9e5cf4058899dbeb3c9d6cec082c9ac76c045143081e19718bf4f5760dab85b",
+      "fp1": null,
+      "pending": "Awaiting the first implementation. dtxmania-poly E03-02 (#104) and ghostnote both produce this; the value lands when they agree. See fp1/README.md.",
+      "expect": "Four bass-drum onsets on channel 13 reducing to 0/1, 1/4, 1/2, 3/4 in measure 1."
+    }
+  ]
+}
