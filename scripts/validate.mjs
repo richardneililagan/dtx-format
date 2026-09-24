@@ -79,18 +79,52 @@ for (const f of manifest.fixtures) {
     )
   }
 
-  if (f.fp1 === null || f.fp1 === undefined) {
+  // Absent and null are different answers, and a consumer has to be able to
+  // tell them apart: absent means nobody has agreed on a value yet, null means
+  // the chart has no fingerprint at all. Conflating them would let a chart with
+  // no drum onsets read as work still to do, or the reverse.
+  if (!('fp1' in f)) {
     if (!f.pending) {
-      fail(`${where}: fp1 is null with no "pending" note explaining why`)
+      fail(`${where}: fp1 is absent with no "pending" note explaining why`)
     }
     pendingCount++
-  } else if (!FP_PATTERN.test(f.fp1)) {
-    fail(`${where}: fp1 "${f.fp1}" is not of the form fp<N>:<64 lowercase hex>`)
+  } else if (f.pending) {
+    fail(`${where}: has both an fp1 and a "pending" note; an agreed value is not pending`)
+  } else if (f.fp1 !== null && !FP_PATTERN.test(f.fp1)) {
+    fail(`${where}: fp1 "${f.fp1}" is not of the form fp<N>:<64 lowercase hex>, or null`)
+  } else if (f.fp1 !== null && !f.fp1.startsWith(`${manifest.algorithm}:`)) {
+    fail(`${where}: fp1 "${f.fp1}" is not a ${manifest.algorithm} fingerprint`)
   }
 
   const prov = join(dirname(f.chart), 'PROVENANCE.md')
   if (!(await exists(prov))) {
     fail(`${where}: no PROVENANCE.md beside the chart (${prov}). See NOTICE.`)
+  }
+}
+
+// --- pairs ------------------------------------------------------------------
+// A fixture naming another in "sameAs" is one half of a pair the algorithm must
+// not tell apart: a re-save, a relabel, a tempo edit. The consumers assert each
+// chart against its own value; this asserts the recorded values agree, so a
+// pair cannot be pinned to two different answers by a careless edit. Nothing
+// is computed here.
+const bySlug = new Map(manifest.fixtures.map((f) => [f.slug, f]))
+for (const f of manifest.fixtures) {
+  if (f.sameAs === undefined) continue
+  const where = `fixture "${f.slug}"`
+  const other = bySlug.get(f.sameAs)
+  if (!other) {
+    fail(`${where}: sameAs names "${f.sameAs}", which is not a fixture`)
+  } else if (other === f) {
+    fail(`${where}: sameAs names itself`)
+  } else if (!('fp1' in f) || !('fp1' in other)) {
+    fail(`${where}: sameAs "${f.sameAs}" but one of the pair is still pending`)
+  } else if (f.fp1 !== other.fp1) {
+    fail(
+      `${where}: sameAs "${f.sameAs}" but the recorded values differ.\n` +
+      `    ${f.slug}: ${f.fp1}\n` +
+      `    ${other.slug}: ${other.fp1}`
+    )
   }
 }
 
@@ -117,7 +151,7 @@ for (const entry of await readdir(chartsDir, { withFileTypes: true })) {
 
 // --- report -----------------------------------------------------------------
 if (pendingCount > 0) {
-  warn(`${pendingCount} fixture(s) awaiting a fingerprint — expected while no implementation exists yet`)
+  warn(`${pendingCount} fixture(s) awaiting a fingerprint two implementations agree on`)
 }
 for (const w of warnings) console.log(`warning: ${w}`)
 
@@ -128,4 +162,4 @@ if (errors.length > 0) {
 }
 
 const n = manifest.fixtures.length
-console.log(`ok — ${n} fixture(s) validated, ${n - pendingCount} with a pinned fingerprint`)
+console.log(`ok — ${n} fixture(s) validated, ${n - pendingCount} with an agreed value`)

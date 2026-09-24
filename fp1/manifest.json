@@ -3,12 +3,112 @@
   "algorithm": "fp1",
   "fixtures": [
     {
-      "slug": "placeholder-minimal",
-      "chart": "charts/placeholder-minimal/placeholder.dtx",
-      "sha256": "c9e5cf4058899dbeb3c9d6cec082c9ac76c045143081e19718bf4f5760dab85b",
+      "slug": "fp1-plain",
+      "chart": "charts/fp1-plain/plain.dtx",
+      "sha256": "08c01c060ad73efa3f1b57fc0fb4aa8d02d380e147dfb4a345cf058d8d93e327",
+      "fp1": "fp1:a1be1d488944613f2526aeb77c9a4546cce759a6b8206d24fa43177573483440",
+      "expect": "A plain chart: hi-hat, snare and bass drum over two measures, with a BGM line that must not count."
+    },
+    {
+      "slug": "fp1-layered",
+      "chart": "charts/fp1-layered/layered.dtx",
+      "sha256": "0def1f8e07b2661f9a0beab98026aa01985ad6020fa78d3637114792b5ddaa2f",
+      "fp1": "fp1:0b693c4e6789fce54deaa4f809d564a2bf0a1a5c4aeb2998b9269be53a2da1ec",
+      "expect": "Three lines on channel 12 in measure 1, at K=2, K=3 and K=2 again. They overlay to the union {0/1, 1/3, 1/2}, each line read at its own K; they are never concatenated into one line."
+    },
+    {
+      "slug": "fp1-subdivision-coarse",
+      "chart": "charts/fp1-subdivision-coarse/coarse.dtx",
+      "sha256": "210865fbed0209d3212b7e9a3382bf15050b33e168c7b6d7be1d5fe0e775298d",
+      "fp1": "fp1:962b5f704d410cfd70d39b2c8f97dc5b08992e1e5e0d2721faeaa944f8285f3d",
+      "expect": "Onsets written on the coarsest grid that holds them."
+    },
+    {
+      "slug": "fp1-subdivision-fine",
+      "chart": "charts/fp1-subdivision-fine/fine.dtx",
+      "sha256": "44a76372fad94c3cedea921b6416685a776b627c027838b2d7fc6ae7a8a1105c",
+      "fp1": "fp1:962b5f704d410cfd70d39b2c8f97dc5b08992e1e5e0d2721faeaa944f8285f3d",
+      "sameAs": "fp1-subdivision-coarse",
+      "expect": "The same onsets as fp1-subdivision-coarse re-saved on finer grids (K=192, 4, 6 and 16). Positions are reduced fractions, so the fingerprint must not move."
+    },
+    {
+      "slug": "fp1-relabel-original",
+      "chart": "charts/fp1-relabel-original/original.dtx",
+      "sha256": "5507322d4986baa29ba1f22b5d3b74309ff6384d8bb0696cd118316744b62243",
+      "fp1": "fp1:99436c1f9ce61b4b569b9827d038323b0d10b6171171873304322394a82521ed",
+      "expect": "Onsets naming samples 01 and 02."
+    },
+    {
+      "slug": "fp1-relabel-swapped",
+      "chart": "charts/fp1-relabel-swapped/swapped.dtx",
+      "sha256": "f2cb4d3552d103dd1b81a3517c167041a1118a720e028df5949932b70c6da657",
+      "fp1": "fp1:99436c1f9ce61b4b569b9827d038323b0d10b6171171873304322394a82521ed",
+      "sameAs": "fp1-relabel-original",
+      "expect": "The same onsets as fp1-relabel-original with every code relabelled (0A, ZZ) and the WAV definitions renamed. A code is an onset unless it is exactly 00, so nothing moves."
+    },
+    {
+      "slug": "fp1-bpm-slow",
+      "chart": "charts/fp1-bpm-slow/slow.dtx",
+      "sha256": "337e0474e5168395a54300dee9440347ef41d6acb6952ca94d0fe0821343af1c",
+      "fp1": "fp1:d6e97048bf3bec03028b2b3d6ca6fdef806e3616a6cb7c30b93456f9849b5d69",
+      "expect": "A chart with #BPM and #BPM01 set, and a channel 08 tempo change."
+    },
+    {
+      "slug": "fp1-bpm-fast",
+      "chart": "charts/fp1-bpm-fast/fast.dtx",
+      "sha256": "d63c0a553d8ea5b30a1b7ece70f6894e32227cfae5bf0d2214215a3ba6dd39ab",
+      "fp1": "fp1:d6e97048bf3bec03028b2b3d6ca6fdef806e3616a6cb7c30b93456f9849b5d69",
+      "sameAs": "fp1-bpm-slow",
+      "expect": "fp1-bpm-slow with only the #BPM and #BPM01 values changed. Positions are measure-relative, so a tempo edit moves no onset."
+    },
+    {
+      "slug": "fp1-sparse",
+      "chart": "charts/fp1-sparse/sparse.dtx",
+      "sha256": "f9cdd6d56ea5a3a2342914feb1c4e0d91297341f0a2e400a73eaee3d9fb49db1",
+      "fp1": "fp1:36ec9eb33d1395591c2a68143cc3e258181203cec5e25b5b945e6f256ca196c5",
+      "expect": "Onsets in measures 0, 2, 10, 99 and 999 and nowhere between; measure 5 has an all-00 line that contributes nothing. Measures sort by number, so 10 follows 2."
+    },
+    {
+      "slug": "fp1-lanes-1a-1c",
+      "chart": "charts/fp1-lanes-1a-1c/lanes.dtx",
+      "sha256": "2d59bfee531fef760eef12a19784ba803c43cb191793049edfd9b97ffe6de1e5",
+      "fp1": "fp1:9fc10f83d8f7bc5a88a0b58dd8f9275fa74783c38345f8db7849fb9e6f0e9e53",
+      "expect": "Channels 1A, 1B and 1C, written out of order and once in lower case with spaces in the payload. Lanes serialise in canonical order 11 to 1C."
+    },
+    {
+      "slug": "fp1-no-onsets",
+      "chart": "charts/fp1-no-onsets/no-onsets.dtx",
+      "sha256": "b73f38b3e52c10690a9cb1cb497d8c631065a6d7434d3b7eb4adcc413f45864a",
       "fp1": null,
-      "pending": "Awaiting the first implementation. dtxmania-poly E03-02 (#104) and ghostnote both produce this; the value lands when they agree. See fp1/README.md.",
-      "expect": "Four bass-drum onsets on channel 13 reducing to 0/1, 1/4, 1/2, 3/4 in measure 1."
+      "expect": "BGM, measure length, guitar, bass, auto-play and hidden channels, and an all-00 drum line. No player-struck drum onset, so there is no fingerprint: fp1 is null, which is not a sentinel."
+    },
+    {
+      "slug": "fp1-tuplets",
+      "chart": "charts/fp1-tuplets/tuplets.dtx",
+      "sha256": "3c88442a74d340ffb387158c1260966f3917f70a64a332f57c9f43096d0f28f5",
+      "fp1": "fp1:5f057c58304abcb53193b50c5faed72d63f9bd1ed0ec8e5aa2b40c01bd375c7a",
+      "expect": "Lines of K=5, 7, 11 and 47, whose onsets do not land on any power-of-two grid (a 384-per-measure store cannot hold a fifth)."
+    },
+    {
+      "slug": "fp1-utf16le-bom",
+      "chart": "charts/fp1-utf16le-bom/utf16le.dtx",
+      "sha256": "86028201578bf9850e29a449c8a8e60234ec4d826ea384d0fb95c9b3fb683d93",
+      "fp1": "fp1:03a7ed2297cb4c24cd1c4f85586366c92e35ee02dba86ab13991492d4974e756",
+      "expect": "A UTF-16LE file with a byte-order mark and a Japanese title."
+    },
+    {
+      "slug": "fp1-shift-jis-lead-bytes",
+      "chart": "charts/fp1-shift-jis-lead-bytes/lead-bytes.dtx",
+      "sha256": "2af7360a75285fb09e3536a577e6eab6a4521bc105009fd40b9c35444ec447d8",
+      "fp1": "fp1:824fdbcd3aa8177d4f46e7a9248d0fc6f9f8a6908df88d03643c4ffae26fe36e",
+      "expect": "Shift-JIS with a double-byte title, a lead byte with no trail byte before a CRLF, and a lead byte directly before the # of an object line, which stops that line being read as one."
+    },
+    {
+      "slug": "fp1-utf8-unicode-space",
+      "chart": "charts/fp1-utf8-unicode-space/unicode-space.dtx",
+      "sha256": "674fd152f5639b4afa74b66072e6e5428bbfd7f0755a7252d08c9bd212d271a3",
+      "fp1": "fp1:a7ac3e97a4505ef3024497af45a63fdc7d160def2146ef00e4ec1484dfacfc81",
+      "expect": "UTF-8 with a byte-order mark. A U+00A0 inside a payload is white space and is removed; a U+0085 is not white space to the reference and stays, shifting how the payload pairs into codes."
     }
   ]
 }

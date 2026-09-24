@@ -89,8 +89,9 @@ hash to make a red build green without reading why it went red.
 1. `charts/<slug>/` — the chart, plus a `PROVENANCE.md` saying where it came
    from and why it is here. A chart without provenance fails validation.
 2. Add an entry to `fp1/manifest.json` with the chart path and its SHA-256.
-3. Set `fp1` to the fingerprint once two implementations agree on it, or leave
-   it `null` with a `pending` note saying what it is waiting for.
+3. Set `fp1` to the fingerprint once two implementations agree on it — `null`
+   if they agree the chart has none — or leave `fp1` out and add a `pending`
+   note saying what it is waiting for. A release must have nothing pending.
 4. `node scripts/validate.mjs`
 
 Pick fixtures for **coverage of the algorithm**, not for songs you like.

@@ -15,8 +15,9 @@ Charts chosen for **format coverage**: the encodings, the format variants
 `dtxmania-poly`'s corpus README is the model — 21 charts chosen to exercise
 quirks, not to be a music library.
 
-## Pending
+## What is here now
 
-`placeholder-minimal` is scaffolding, not coverage. The real set arrives when
-`dtxmania-poly`'s parser corpus moves here; see the mapping table in the root
-README.
+The `fp1-*` charts, authored for this repository to cover the `fp1` algorithm;
+[`fp1/README.md`](../fp1/README.md) lists what each one exercises. The parser
+corpus arrives when `dtxmania-poly`'s `corpus/` moves here; see the mapping table
+in the root README.
